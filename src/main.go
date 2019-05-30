@@ -39,7 +39,8 @@ func main() {
 	fmt.Printf("min response time: %vms\n", min)
 	fmt.Printf("max response time: %vms\n", max)
 	fmt.Printf("avg response time: %vms\n", avg)
-	fmt.Printf("stdDev: %vms\n", stdDev)
+	fmt.Printf("stdDev: %6.2fms\n", stdDev)
+	fmt.Printf("max expected response time: %6.2f", avg + stdDev)
 }
 
 func getMax(x []float64) float64 {
