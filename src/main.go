@@ -16,7 +16,7 @@ func main() {
 	iterations := 100
 	responseTimes := make([]float64, iterations)
 
-	for i := 0; i < iterations; i++ {
+	for i := 1; i <= iterations; i++ {
 		start := time.Now().UnixNano()
 
 		resp, err := client.Get(url)
@@ -40,7 +40,7 @@ func main() {
 	fmt.Printf("max response time: %vms\n", max)
 	fmt.Printf("avg response time: %vms\n", avg)
 	fmt.Printf("stdDev: %6.2fms\n", stdDev)
-	fmt.Printf("max anticipated response time: %6.2f\n", avg + stdDev)
+	fmt.Printf("max anticipated response time: %6.2fms\n", avg + stdDev)
 }
 
 func getMax(x []float64) float64 {
