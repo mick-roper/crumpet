@@ -70,6 +70,7 @@ func Run(spec *TestSpec) {
 
 	min, max, avg, stdDev := getMin(responseTimes), getMax(responseTimes), getAvg(responseTimes), getStdDev(responseTimes)
 
+	fmt.Printf("requests: %v\n", iterations)
 	fmt.Printf("min response time: %vms\n", min)
 	fmt.Printf("max response time: %vms\n", max)
 	fmt.Printf("avg response time: %6.2fms\n", avg)
