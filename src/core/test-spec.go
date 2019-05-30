@@ -6,3 +6,9 @@ type TestSpec struct {
 	Iterations int
 	Concurrency int
 }
+
+// TestResponse produced by a single test run
+type TestResponse struct {
+	StatusCode int
+	ElapsedMs float64
+}
