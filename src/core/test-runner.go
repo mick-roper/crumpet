@@ -46,7 +46,7 @@ func Run(spec *TestSpec) {
 					
 					responseTimes = append(responseTimes, elapsedMs)
 
-					writeQueue <- fmt.Sprintf("%v\t%6.2f", resp.StatusCode, elapsedMs)
+					writeQueue <- fmt.Sprintf("%v\t%vms\n", resp.StatusCode, elapsedMs)
 					
 					wg.Add(1) // add for the benefit of the message writer
 					wg.Done() // remove due to processing being complete
@@ -58,7 +58,7 @@ func Run(spec *TestSpec) {
 	// message writer
 	go func(wg *sync.WaitGroup) {
 		for message := range writeQueue {
-			fmt.Printf("%v\n", message)
+			fmt.Print(message)
 
 			wg.Done()
 		}
