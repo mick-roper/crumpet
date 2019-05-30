@@ -23,6 +23,8 @@ func Run(spec *TestSpec) {
 	for i := 0; i < iterations; i++ {
 		statusCode, elapsedMs, err := makeRequest(client, url)
 
+		responseTimes[i] = elapsedMs
+
 		if err != nil { 
 			fmt.Print(err)
 		} else {
