@@ -20,10 +20,11 @@ func Run(spec *TestSpec) {
 	fmt.Printf("request\tstatus code\telapsed\n")
 
 	waitGroup := sync.WaitGroup{}
-	waitGroup.Add(spec.Concurrency)
+	waitGroup.Add(iterations)
 
 	testQueue := make(chan string, iterations)
 	writeQueue := make(chan string)
+	responseTimesQueue := make(chan float64)
 
 	responseTimes := make([]float64, iterations)
 
@@ -45,17 +46,23 @@ func Run(spec *TestSpec) {
 				} else {
 					elapsedMs := resp.ElapsedMs
 					
-					responseTimes = append(responseTimes, elapsedMs)
+					responseTimesQueue <- elapsedMs
 
 					writeQueue <- fmt.Sprintf("%v\t%6.2f", resp.StatusCode, elapsedMs)
+
+					wg.Done()
 				}
 			}
-
-			fmt.Print("work complete")
-			wg.Done()
 		}(&waitGroup)
 	}
 
+	go func() {
+		for elapsedMs := range responseTimesQueue {
+			responseTimes = append(responseTimes, elapsedMs)
+		}
+	}()
+
+	// message writer
 	go func() {
 		for message := range writeQueue {
 			fmt.Printf("%v\n", message)
