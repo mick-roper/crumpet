@@ -12,6 +12,9 @@ func Run(spec *TestSpec) {
 	url := spec.URL
 	iterations := spec.Iterations
 
+	fmt.Printf("Target: %v\n", url)
+	fmt.Printf("performing %v iterations\n", iterations)
+
 	client := &http.Client{}
 
 	fmt.Printf("request\tstatus code\telapsed\n")
