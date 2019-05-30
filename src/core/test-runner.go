@@ -8,13 +8,14 @@ import (
 )
 
 // Run the test
-func Run() {
-	const url = "https://api.marcopolo.acc.dazn-dev.com/v1/override/8e746083-cda8-4844-b704-88d2f437ae4d/base"
+func Run(spec *TestSpec) {
+	url := spec.URL
+	iterations := spec.Iterations
+
 	client := &http.Client{}
 
 	fmt.Printf("request\tstatus code\telapsed\n")
 
-	iterations := 100
 	responseTimes := make([]float64, iterations)
 
 	for i := 0; i < iterations; i++ {
