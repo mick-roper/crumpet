@@ -23,6 +23,8 @@ func Run(spec *TestSpec) {
 	waitGroup.Add(spec.Concurrency)
 
 	testQueue := make(chan string, iterations)
+	writeQueue := make(chan string)
+
 	responseTimes := make([]float64, iterations)
 
 	// prep
@@ -42,12 +44,20 @@ func Run(spec *TestSpec) {
 					elapsedMs := resp.ElapsedMs
 					
 					responseTimes = append(responseTimes, elapsedMs)
+
+					writeQueue <- fmt.Sprintf("%v\t%6.2f", resp.StatusCode, elapsedMs)
 				}
 			}
 
 			wg.Done()
 		}(&waitGroup)
 	}
+
+	go func() {
+		for message := range writeQueue {
+			fmt.Printf("%v\n", message)
+		}
+	}()
 
 	waitGroup.Wait()
 
