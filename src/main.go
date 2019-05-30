@@ -1,12 +1,20 @@
 package main
 
-import "core"
+import (
+	"flag"
+	"core"
+)
 
 func main() {
-	spec := &core.TestSpec{
-		URL: "https://api.marcopolo.acc.dazn-dev.com/v1/override/1bab7192-92f6-4ca0-b0f0-29a67b275537/geofence",
-		Iterations: 100,
-	}
+	var url string
+	var iterations int
+
+	flag.StringVar(&url, "url", "", "the url to be tested")
+	flag.IntVar(&iterations, "iteratons", 0, "the number of iterations")
+
+	flag.Parse();
+
+	spec := &core.TestSpec{URL: url, Iterations: iterations}
 
 	core.Run(spec)
 }
