@@ -16,7 +16,7 @@ func main() {
 	iterations := 100
 	responseTimes := make([]float64, iterations)
 
-	for i := 1; i <= iterations; i++ {
+	for i := 0; i < iterations; i++ {
 		start := time.Now().UnixNano()
 
 		resp, err := client.Get(url)
@@ -28,7 +28,7 @@ func main() {
 		if err != nil { 
 			fmt.Print(err)
 		} else {
-			fmt.Printf("request %v:\t%v\t%vms\n", i, resp.StatusCode, elapsedMs)
+			fmt.Printf("request %v:\t%v\t%vms\n", i + 1, resp.StatusCode, elapsedMs)
 		}
 	}
 
