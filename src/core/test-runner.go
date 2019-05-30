@@ -21,7 +21,6 @@ func Run(spec *TestSpec) {
 
 	testQueue := make(chan string, iterations)
 	writeQueue := make(chan string)
-	responseTimesQueue := make(chan float64)
 
 	responseTimes := make([]float64, iterations)
 
@@ -36,7 +35,7 @@ func Run(spec *TestSpec) {
 	for i := 0; i < spec.Concurrency; i++ {
 		go func (wg *sync.WaitGroup) {
 			client := &http.Client{}
-			
+
 			for url := range testQueue {
 				resp, err := makeRequest(client, url)
 
@@ -45,28 +44,25 @@ func Run(spec *TestSpec) {
 				} else {
 					elapsedMs := resp.ElapsedMs
 					
-					responseTimesQueue <- elapsedMs
+					responseTimes = append(responseTimes, elapsedMs)
 
 					writeQueue <- fmt.Sprintf("%v\t%6.2f", resp.StatusCode, elapsedMs)
-
-					wg.Done()
+					
+					wg.Add(1) // add for the benefit of the message writer
+					wg.Done() // remove due to processing being complete
 				}
 			}
 		}(&waitGroup)
 	}
 
-	go func() {
-		for elapsedMs := range responseTimesQueue {
-			responseTimes = append(responseTimes, elapsedMs)
-		}
-	}()
-
 	// message writer
-	go func() {
+	go func(wg *sync.WaitGroup) {
 		for message := range writeQueue {
 			fmt.Printf("%v\n", message)
+
+			wg.Done()
 		}
-	}()
+	}(&waitGroup)
 
 	waitGroup.Wait()
 
