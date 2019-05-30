@@ -21,18 +21,12 @@ func Run(spec *TestSpec) {
 	responseTimes := make([]float64, iterations)
 
 	for i := 0; i < iterations; i++ {
-		start := time.Now().UnixNano()
-
-		resp, err := client.Get(url)
-
-		end := time.Now().UnixNano()
-		elapsedMs := (float64)((end - start) / 1000000)
-		responseTimes[i] = elapsedMs
+		statusCode, elapsedMs, err := makeRequest(client, url)
 
 		if err != nil { 
 			fmt.Print(err)
 		} else {
-			fmt.Printf("request %v:\t%v\t%vms\n", i + 1, resp.StatusCode, elapsedMs)
+			fmt.Printf("request %v:\t%v\t%vms\n", i + 1, statusCode, elapsedMs)
 		}
 	}
 
@@ -44,4 +38,16 @@ func Run(spec *TestSpec) {
 	fmt.Printf("max response time: %vms\n", max)
 	fmt.Printf("avg response time: %vms\n", avg)
 	fmt.Printf("expected response time: %6.2fms\n", avg + stdDev)
+}
+
+func makeRequest(client *http.Client, url string) (int, float64, error) {
+	start := time.Now().UnixNano()
+
+	resp, err := client.Get(url)
+
+	end := time.Now().UnixNano()
+	
+	elapsedMs := (float64)((end - start) / 1000000)
+	
+	return resp.StatusCode, elapsedMs, err
 }
