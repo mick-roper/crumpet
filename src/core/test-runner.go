@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"time"
+	"sync"
 )
 
 // Run the test
@@ -18,20 +19,37 @@ func Run(spec *TestSpec) {
 
 	fmt.Printf("request\tstatus code\telapsed\n")
 
+	waitGroup := sync.WaitGroup{}
+	waitGroup.Add(spec.Concurrency)
+
+	testQueue := make(chan string, iterations)
 	responseTimes := make([]float64, iterations)
 
+	// prep
 	for i := 0; i < iterations; i++ {
-		resp, err := makeRequest(client, url)
-
-		if err != nil { 
-			fmt.Print(err)
-		} else {
-			elapsedMs := resp.ElapsedMs
-			
-			responseTimes[i] = elapsedMs
-			fmt.Printf("request %v:\t%v\t%vms\n", i + 1, resp.StatusCode, elapsedMs)
-		}
+		testQueue <- url
 	}
+
+	// execute
+	for i := 0; i < spec.Concurrency; i++ {
+		go func (wg *sync.WaitGroup) {
+			for url := range testQueue {
+				resp, err := makeRequest(client, url)
+
+				if err != nil { 
+					fmt.Print(err)
+				} else {
+					elapsedMs := resp.ElapsedMs
+					
+					responseTimes = append(responseTimes, elapsedMs)
+				}
+			}
+
+			wg.Done()
+		}(&waitGroup)
+	}
+
+	waitGroup.Wait()
 
 	fmt.Print("\n\n")
 
