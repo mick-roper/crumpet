@@ -14,9 +14,6 @@ func Run(spec *TestSpec) {
 
 	fmt.Printf("Target: %v\n", url)
 	fmt.Printf("performing %v iterations\n", iterations)
-
-	client := &http.Client{}
-
 	fmt.Printf("request\tstatus code\telapsed\n")
 
 	waitGroup := sync.WaitGroup{}
@@ -38,6 +35,8 @@ func Run(spec *TestSpec) {
 
 	for i := 0; i < spec.Concurrency; i++ {
 		go func (wg *sync.WaitGroup) {
+			client := &http.Client{}
+			
 			for url := range testQueue {
 				resp, err := makeRequest(client, url)
 
