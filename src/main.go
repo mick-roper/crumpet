@@ -4,7 +4,6 @@ import (
 	"log"
 	"net/http"
 	"time"
-	"util"
 )
 
 func main() {
@@ -36,10 +35,11 @@ func main() {
 
 	log.Print("\n\n")
 
-	min, max := getMin(responseTimes), getMax(responseTimes)
+	min, max, avg := getMin(responseTimes), getMax(responseTimes), getAvg(responseTimes)
 
 	log.Printf("min response time: %v", min)
 	log.Printf("max response time: %v", max)
+	log.Printf("avg response time: %v", avg)
 }
 
 func getMax(x []int64) int64 {
@@ -64,4 +64,15 @@ func getMin(x []int64) int64 {
 	}
 
 	return m
+}
+
+func getAvg(x []int64) float64 {
+	l := (float64)(len(x))
+	var sum float64
+
+	for i := 0; i < len(x); i++ {
+		sum += (float64)(x[i])
+	}
+
+	return sum / l
 }
