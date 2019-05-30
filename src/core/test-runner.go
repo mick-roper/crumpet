@@ -5,12 +5,15 @@ import (
 	"net/http"
 	"time"
 	"sync"
+	"sync/atomic"
 )
 
 // Run the test
 func Run(spec *TestSpec) {
 	url := spec.URL
 	iterations := spec.Iterations
+
+	var counter uint64
 
 	fmt.Printf("Target: %v\n", url)
 	fmt.Printf("performing %v iterations\n", iterations)
@@ -47,6 +50,8 @@ func Run(spec *TestSpec) {
 					responseTimes = append(responseTimes, elapsedMs)
 
 					writeQueue <- fmt.Sprintf("runner %v\t%v\t%vms\n", ix, resp.StatusCode, elapsedMs)
+
+					atomic.AddUint64(&counter, 1)
 					
 					wg.Add(1) // add for the benefit of the message writer
 					wg.Done() // remove due to processing being complete
@@ -70,7 +75,7 @@ func Run(spec *TestSpec) {
 
 	min, max, avg, stdDev := getMin(responseTimes), getMax(responseTimes), getAvg(responseTimes), getStdDev(responseTimes)
 
-	fmt.Printf("requests: %v\n", iterations)
+	fmt.Printf("requests: %v\n", atomic.LoadUint64(&counter))
 	fmt.Printf("min response time: %vms\n", min)
 	fmt.Printf("max response time: %vms\n", max)
 	fmt.Printf("avg response time: %6.2fms\n", avg)
