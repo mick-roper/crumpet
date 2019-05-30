@@ -33,6 +33,8 @@ func Run(spec *TestSpec) {
 	}
 
 	// execute
+	fmt.Printf("starting %v workers", spec.Concurrency)
+
 	for i := 0; i < spec.Concurrency; i++ {
 		go func (wg *sync.WaitGroup) {
 			for url := range testQueue {
@@ -49,6 +51,7 @@ func Run(spec *TestSpec) {
 				}
 			}
 
+			fmt.Print("work complete")
 			wg.Done()
 		}(&waitGroup)
 	}
