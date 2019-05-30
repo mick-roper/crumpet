@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	const url = "https://api.marcopolo.acc.dazn-dev.com/v1/override/1bab7192-92f6-4ca0-b0f0-29a67b275537/geofence"
+	const url = "https://api.marcopolo.acc.dazn-dev.com/v1/override/8e746083-cda8-4844-b704-88d2f437ae4d/base"
 	client := &http.Client{}
 
 	fmt.Printf("request\tstatus code\telapsed\n")
