@@ -72,8 +72,8 @@ func Run(spec *TestSpec) {
 
 	fmt.Printf("min response time: %vms\n", min)
 	fmt.Printf("max response time: %vms\n", max)
-	fmt.Printf("avg response time: %vms\n", avg)
-	fmt.Printf("expected response time: %6.2fms\n", avg + stdDev)
+	fmt.Printf("avg response time: %6.2fms\n", avg)
+	fmt.Printf("std deviation: %6.2fms\n", stdDev)
 }
 
 func makeRequest(client *http.Client, url string) (*TestResponse, error) {
