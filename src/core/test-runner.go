@@ -6,7 +6,6 @@ import (
 	"time"
 	"sync"
 	"sync/atomic"
-	"math/rand"
 )
 
 // Run the test
@@ -56,10 +55,6 @@ func Run(spec *TestSpec) {
 					
 					wg.Add(1) // add for the benefit of the message writer
 					wg.Done() // remove due to processing being complete
-
-					// delay
-					delay := rand.Intn(spec.DelayMs)
-					time.Sleep(delay)
 				}
 			}
 		}(i, &waitGroup)

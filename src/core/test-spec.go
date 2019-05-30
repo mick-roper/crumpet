@@ -5,7 +5,6 @@ type TestSpec struct {
 	URL string
 	Iterations int
 	Concurrency int
-	DelayMs int
 }
 
 // TestResponse produced by a single test run
