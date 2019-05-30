@@ -4,4 +4,5 @@ package core
 type TestSpec struct {
 	URL string
 	Iterations int
+	Concurrency int
 }
