@@ -33,7 +33,7 @@ func Run(spec *TestSpec) {
 	fmt.Printf("starting %v workers", spec.Concurrency)
 
 	for i := 0; i < spec.Concurrency; i++ {
-		go func (wg *sync.WaitGroup) {
+		go func (ix int, wg *sync.WaitGroup) {
 			client := &http.Client{}
 
 			for url := range testQueue {
@@ -46,13 +46,13 @@ func Run(spec *TestSpec) {
 					
 					responseTimes = append(responseTimes, elapsedMs)
 
-					writeQueue <- fmt.Sprintf("%v\t%vms\n", resp.StatusCode, elapsedMs)
+					writeQueue <- fmt.Sprintf("runner %v\t%v\t%vms\n", ix, resp.StatusCode, elapsedMs)
 					
 					wg.Add(1) // add for the benefit of the message writer
 					wg.Done() // remove due to processing being complete
 				}
 			}
-		}(&waitGroup)
+		}(i, &waitGroup)
 	}
 
 	// message writer
