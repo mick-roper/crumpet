@@ -34,11 +34,12 @@ func main() {
 
 	fmt.Print("\n\n")
 
-	min, max, avg := getMin(responseTimes), getMax(responseTimes), getAvg(responseTimes)
+	min, max, avg, stdDev := getMin(responseTimes), getMax(responseTimes), getAvg(responseTimes), getStdDev(responseTimes)
 
 	fmt.Printf("min response time: %vms\n", min)
 	fmt.Printf("max response time: %vms\n", max)
 	fmt.Printf("avg response time: %vms\n", avg)
+	fmt.Printf("stdDev: %vms\n", stdDev)
 }
 
 func getMax(x []float64) float64 {
