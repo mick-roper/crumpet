@@ -10,7 +10,7 @@ func main() {
 	var iterations int
 
 	flag.StringVar(&url, "url", "", "the url to be tested")
-	flag.IntVar(&iterations, "iteratons", 0, "the number of iterations")
+	flag.IntVar(&iterations, "iterations", 0, "the number of iterations")
 
 	flag.Parse();
 
