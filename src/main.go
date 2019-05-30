@@ -22,7 +22,7 @@ func main() {
  
 	// todo: find a better way to provide args
 
-	spec = &core.TestSpec{URL: url, Iterations: iterations, Concurrency: concurrency}
+	spec = &core.TestSpec{URL: url, Iterations: iterations, Concurrency: concurrency, DelayMs: 100}
 
 	core.Run(spec)
 }
