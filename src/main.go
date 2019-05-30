@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"fmt"
 	"net/http"
 	"time"
 )
@@ -10,14 +10,12 @@ func main() {
 	const url = "https://api.marcopolo.acc.dazn-dev.com/v1/override/1bab7192-92f6-4ca0-b0f0-29a67b275537/geofence"
 	client := &http.Client{}
 
-	log.Printf("request\tstatus code\telapsed")
+	fmt.Printf("request\tstatus code\telapsed\n")
 
 	iterations := 100
 	responseTimes := make([]int64, iterations)
 
 	for i := 0; i < iterations; i++ {
-		log.Printf("making GET request %v", i)
-
 		start := time.Now().UnixNano()
 
 		resp, err := client.Get(url)
@@ -27,19 +25,19 @@ func main() {
 		responseTimes[i] = elapsedMs
 
 		if err != nil { 
-			log.Print(err)
+			fmt.Print(err)
 		} else {
-			log.Printf("request %v:\t%v\t%vms", i, resp.StatusCode, elapsedMs)
+			fmt.Printf("request %v:\t%v\t%vms\n", i, resp.StatusCode, elapsedMs)
 		}
 	}
 
-	log.Print("\n\n")
+	fmt.Print("\n\n")
 
 	min, max, avg := getMin(responseTimes), getMax(responseTimes), getAvg(responseTimes)
 
-	log.Printf("min response time: %v", min)
-	log.Printf("max response time: %v", max)
-	log.Printf("avg response time: %v", avg)
+	fmt.Printf("min response time: %vms\n", min)
+	fmt.Printf("max response time: %vms\n", max)
+	fmt.Printf("avg response time: %vms\n", avg)
 }
 
 func getMax(x []int64) int64 {
