@@ -27,6 +27,11 @@ func main() {
 		Iterations: iterations, 
 		Concurrency: concurrency,
 		MaxDelayMs: maxDelayMs,
+		Options: &core.TestSpecOptions {
+			Headers: map[string]string{
+				"authorization": "apikey abc-123",
+			},
+		},
 	}
 
 	core.Run(spec)
