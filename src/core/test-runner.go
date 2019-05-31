@@ -34,7 +34,7 @@ func Run(spec *TestSpec) {
 	}
 
 	// execution
-	fmt.Printf("starting %v workers", spec.Concurrency)
+	fmt.Printf("starting %v workers\n\n", spec.Concurrency)
 
 	waitGroup := sync.WaitGroup{}
 	waitGroup.Add(iterations)
@@ -55,9 +55,10 @@ func Run(spec *TestSpec) {
 
 				writeQueue <- fmt.Sprintf("runner %v\t%v\t%vms\t%v\t%v\n", ix, resp.StatusCode, elapsedMs, resp.Data, resp.URL)
 
+				// atomically increment the counter
 				atomic.AddUint64(&counter, 1)
 				
-				// todo: delay a bit
+				// delay a bit
 				var delay int
 
 				if spec.MaxDelayMs > 0 {
@@ -80,6 +81,12 @@ func Run(spec *TestSpec) {
 			wg.Done()
 		}
 	}(&waitGroup)
+
+	// progress writer
+	go func() {
+		time.Sleep(10 * time.Second)
+		writeQueue <- fmt.Sprintf(" -- processed %v iterations --\n", atomic.LoadUint64(&counter))
+	}()
 
 	waitGroup.Wait()
 
