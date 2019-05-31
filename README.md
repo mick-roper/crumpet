@@ -16,7 +16,7 @@ You can either run test from the CLI by providing arguments, or you can provide 
 
 Specfile are .json files that adhere to the following schema:
 
-```
+```json
 {
   "host": "https://tempuri.org",
   "paths": [
@@ -34,7 +34,9 @@ Specfile are .json files that adhere to the following schema:
   }
 }
 ```
-### What does it all mean?
+
+### Specfile definition
+
 | specfile property | purpose | allowed values |
 |------------------|---------|----------------|
 | host | identifies the hostname of your api | {HTTP/S}://{any string} |
