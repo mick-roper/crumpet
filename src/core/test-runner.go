@@ -13,30 +13,31 @@ import (
 
 // Run the test
 func Run(spec *TestSpec) {
-	url := spec.URL
+	host := spec.Host
 	iterations := spec.Iterations
 
 	var counter uint64
 
-	fmt.Printf("Target: %v\n", url)
-	fmt.Printf("performing %v iterations\n", iterations)
-	fmt.Printf("request\tstatus code\telapsed\n")
-
-	waitGroup := sync.WaitGroup{}
-	waitGroup.Add(iterations)
+	fmt.Printf("Host: %v\n", host)
+	fmt.Printf("Performing %v iterations\n", iterations)
 
 	testQueue := make(chan string, iterations)
 	writeQueue := make(chan string)
-
 	responseTimes := make([]float64, iterations)
 
 	// prep
 	for i := 0; i < iterations; i++ {
+		// construct a URL from the host and a random path
+		ix := rand.Intn(len(spec.Paths))
+		url := fmt.Sprintf("%v/%v", host, spec.Paths[ix])
 		testQueue <- url
 	}
 
-	// execute
+	// execution
 	fmt.Printf("starting %v workers", spec.Concurrency)
+
+	waitGroup := sync.WaitGroup{}
+	waitGroup.Add(iterations)
 
 	for i := 0; i < spec.Concurrency; i++ {
 		go func (ix int, wg *sync.WaitGroup) {
@@ -52,7 +53,7 @@ func Run(spec *TestSpec) {
 				elapsedMs := resp.ElapsedMs	
 				responseTimes = append(responseTimes, elapsedMs)
 
-				writeQueue <- fmt.Sprintf("runner %v\t%v\t%vms\t%v\n", ix, resp.StatusCode, elapsedMs, resp.Data)
+				writeQueue <- fmt.Sprintf("runner %v\t%v\t%vms\t%v\t%v\n", ix, resp.StatusCode, elapsedMs, resp.Data, resp.URL)
 
 				atomic.AddUint64(&counter, 1)
 				
@@ -129,5 +130,5 @@ func makeRequest(client *http.Client, url string, opts *TestSpecOptions) (*TestR
 		}
 	}
 	
-	return &TestResponse{StatusCode: resp.StatusCode, ElapsedMs: elapsedMs, Data: data}, err
+	return &TestResponse{URL: url, StatusCode: resp.StatusCode, ElapsedMs: elapsedMs, Data: data}, err
 }

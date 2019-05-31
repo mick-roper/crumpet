@@ -2,7 +2,8 @@ package core
 
 // TestSpec that a test runner will process
 type TestSpec struct {
-	URL string
+	Host string
+	Paths []string
 	Iterations int
 	Concurrency int
 	MaxDelayMs int
@@ -16,6 +17,7 @@ type TestSpecOptions struct {
 
 // TestResponse produced by a single test run
 type TestResponse struct {
+	URL string
 	StatusCode int
 	ElapsedMs float64
 	Data string
