@@ -31,7 +31,7 @@ func getAvg(x []float64) float64 {
 	var sum float64
 
 	for i := 0; i < len(x); i++ {
-		sum += (float64)(x[i])
+		sum += (x[i])
 	}
 
 	return sum / count
