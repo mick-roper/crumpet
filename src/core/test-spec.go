@@ -1,5 +1,9 @@
 package core
 
+import (
+	"fmt"
+)
+
 // TestSpec that a test runner will process
 type TestSpec struct {
 	Host string `json:"host"`
@@ -25,10 +29,58 @@ type TestResponse struct {
 
 // TestResult from an executed spec
 type TestResult struct {
-	RequestCount uint64
-	AverageElapsedMs float64
-	MaxElapsedMs float64
-	MinElapsedMs float64
-	StandardDeviation float64
-	Responses []*TestResponse
+	requestCount uint64
+	responses []float64
+}
+
+// Print the result
+func (t *TestResult) Print() {
+	fmt.Printf("requests made: %v\n", t.RequestCount())
+	fmt.Printf("min response time: %vms\n", t.MinElapsedMs())
+	fmt.Printf("max response time: %vms\n", t.MaxElapsedMs())
+	fmt.Printf("avg response time: %6.2fms\n", t.AverageElapsedMs())
+	fmt.Printf("std deviation: %6.2fms\n", t.StandardDeviation())
+	fmt.Printf("90th percentile: %6.2fms\n", t.AverageElapsedMs90thPc())
+	fmt.Printf("95th percentile: %6.2fms\n", t.AverageElapsedMs95thPc())
+	fmt.Printf("99th percentile: %6.2fms\n", t.AverageElapsedMs99thPc())
+}
+
+// RequestCount returns the number of requests
+func (t *TestResult) RequestCount() uint64 {
+	return t.requestCount
+}
+
+// AverageElapsedMs returns the overall average elapsed MS
+func (t *TestResult) AverageElapsedMs() float64 {
+	return getAvg(t.responses)
+}
+
+// AverageElapsedMs90thPc gets the 90th percentile average response time
+func (t *TestResult) AverageElapsedMs90thPc() float64 {
+	return getPercentileAverage(t.responses, 0.9)
+}
+
+// AverageElapsedMs95thPc gets the 95th percentile average response time
+func (t *TestResult) AverageElapsedMs95thPc() float64 {
+	return getPercentileAverage(t.responses, 0.95)
+}
+
+// AverageElapsedMs99thPc gets the 99th percentile average response time
+func (t *TestResult) AverageElapsedMs99thPc() float64 {
+	return getPercentileAverage(t.responses, 0.99)
+}
+
+// MaxElapsedMs returns the maximum elapsed ms
+func (t *TestResult) MaxElapsedMs() float64 {
+	return getMax(t.responses)
+}
+
+// MinElapsedMs returns the minimum elpased ms
+func (t *TestResult) MinElapsedMs() float64 {
+	return getMin(t.responses)
+}
+
+// StandardDeviation returns the standard deviation of the test
+func (t *TestResult) StandardDeviation() float64 {
+	return getStdDev(t.responses)
 }

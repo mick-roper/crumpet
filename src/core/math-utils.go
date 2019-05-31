@@ -1,6 +1,9 @@
 package core
 
-import "math"
+import (
+	"math"
+	"sort"
+)
 
 func getMax(x []float64) float64 {
 	var m float64
@@ -50,4 +53,17 @@ func getStdDev(x []float64) float64 {
 	avg = getAvg(results)
 
 	return math.Sqrt(avg)
+}
+
+func getPercentileAverage(x []float64, pc float64) float64 {
+	n := make([]float64, len(x))
+	copy(x, n)
+
+	sort.Float64s(n)
+	floatBoundary := float64(len(x)) * pc
+	intBoundary := int(floatBoundary)
+
+	avg := getAvg(n[:intBoundary])
+
+	return avg
 }

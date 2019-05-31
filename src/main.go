@@ -56,9 +56,6 @@ func main() {
 	end := time.Now().Unix()
 
 	fmt.Printf("tests finished in %v seconds\n\n", end - start)
-	fmt.Printf("requests made: %v\n", result.RequestCount)
-	fmt.Printf("min response time: %vms\n", result.MinElapsedMs)
-	fmt.Printf("max response time: %vms\n", result.MaxElapsedMs)
-	fmt.Printf("avg response time: %6.2fms\n", result.AverageElapsedMs)
-	fmt.Printf("std deviation: %6.2fms\n", result.StandardDeviation)
+
+	result.Print()
 }

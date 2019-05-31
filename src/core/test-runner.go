@@ -94,16 +94,9 @@ func Run(spec *TestSpec) (*TestResult, error) {
 
 	time.Sleep(500 * time.Millisecond)
 
-	fmt.Print("\n\n")
-
-	min, max, avg, stdDev := getMin(responseTimes), getMax(responseTimes), getAvg(responseTimes), getStdDev(responseTimes)
-
 	result := &TestResult{
-		RequestCount: atomic.LoadUint64(&counter),
-		AverageElapsedMs: avg,
-		MaxElapsedMs: max,
-		MinElapsedMs: min,
-		StandardDeviation: stdDev,
+		requestCount: atomic.LoadUint64(&counter),
+		responses: responseTimes,
 	}
 
 	return result, nil
