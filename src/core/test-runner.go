@@ -6,6 +6,7 @@ import (
 	"time"
 	"sync"
 	"sync/atomic"
+	"math/rand"
 )
 
 // Run the test
@@ -54,7 +55,13 @@ func Run(spec *TestSpec) {
 					atomic.AddUint64(&counter, 1)
 					
 					// todo: delay a bit
-					time.Sleep(100 * time.Millisecond)
+					var delay int
+
+					if spec.MaxDelay > 0 {
+						delay = rand.Intn(spec.MaxDelay)
+					}
+
+					time.Sleep(time.Duration(delay) * time.Millisecond)
 
 					wg.Add(1) // add for the benefit of the message writer
 					wg.Done() // remove due to processing being complete
