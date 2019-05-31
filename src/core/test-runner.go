@@ -57,8 +57,8 @@ func Run(spec *TestSpec) {
 					// todo: delay a bit
 					var delay int
 
-					if spec.MaxDelay > 0 {
-						delay = rand.Intn(spec.MaxDelay)
+					if spec.MaxDelayMs > 0 {
+						delay = rand.Intn(spec.MaxDelayMs)
 					}
 
 					time.Sleep(time.Duration(delay) * time.Millisecond)

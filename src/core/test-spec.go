@@ -5,7 +5,13 @@ type TestSpec struct {
 	URL string
 	Iterations int
 	Concurrency int
-	MaxDelay int
+	MaxDelayMs int
+	Options *TestSpecOptions
+}
+
+// TestSpecOptions that help to further describe a test spec
+type TestSpecOptions struct {
+	Headers map[string]string
 }
 
 // TestResponse produced by a single test run
