@@ -13,3 +13,11 @@ type TestResponse struct {
 	StatusCode int
 	ElapsedMs float64
 }
+
+type TestResult struct {
+	AverageElapsed float64
+	MaxElapsedMs float64
+	MinElapsedMs float64
+	StandardDeviation float64
+	Responses []*TestResponse
+}
