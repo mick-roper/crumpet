@@ -6,6 +6,7 @@ import (
 	"strings"
 	"log"
 	"fmt"
+	"time"
 )
 
 func main() {
@@ -44,12 +45,17 @@ func main() {
 		}
 	}
 
+	start := time.Now().Unix()
+
 	result, err := core.Run(spec)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	end := time.Now().Unix()
+
+	fmt.Printf("tests finished in %v seconds\n\n", end - start)
 	fmt.Printf("requests made: %v\n", result.RequestCount)
 	fmt.Printf("min response time: %vms\n", result.MinElapsedMs)
 	fmt.Printf("max response time: %vms\n", result.MaxElapsedMs)
