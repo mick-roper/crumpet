@@ -8,6 +8,7 @@ import (
 	"sync/atomic"
 	"math/rand"
 	"bytes"
+	"io/ioutil"
 )
 
 // Run the test
@@ -45,28 +46,27 @@ func Run(spec *TestSpec) {
 				resp, err := makeRequest(client, url, nil)
 
 				if err != nil { 
-					fmt.Print(err)
-				} else {
-					elapsedMs := resp.ElapsedMs
-					
-					responseTimes = append(responseTimes, elapsedMs)
-
-					writeQueue <- fmt.Sprintf("runner %v\t%v\t%vms\n", ix, resp.StatusCode, elapsedMs)
-
-					atomic.AddUint64(&counter, 1)
-					
-					// todo: delay a bit
-					var delay int
-
-					if spec.MaxDelayMs > 0 {
-						delay = rand.Intn(spec.MaxDelayMs)
-					}
-
-					time.Sleep(time.Duration(delay) * time.Millisecond)
-
-					wg.Add(1) // add for the benefit of the message writer
-					wg.Done() // remove due to processing being complete
+					panic(err)
 				}
+
+				elapsedMs := resp.ElapsedMs	
+				responseTimes = append(responseTimes, elapsedMs)
+
+				writeQueue <- fmt.Sprintf("runner %v\t%v\t%vms\t%v\n", ix, resp.StatusCode, elapsedMs, resp.Data)
+
+				atomic.AddUint64(&counter, 1)
+				
+				// todo: delay a bit
+				var delay int
+
+				if spec.MaxDelayMs > 0 {
+					delay = rand.Intn(spec.MaxDelayMs)
+				}
+
+				time.Sleep(time.Duration(delay) * time.Millisecond)
+
+				wg.Add(1) // add for the benefit of the message writer
+				wg.Done() // remove due to processing being complete
 			}
 		}(i, &waitGroup)
 	}
@@ -101,6 +101,8 @@ func makeRequest(client *http.Client, url string, opts *TestSpecOptions) (*TestR
 		panic(err)
 	}
 
+	defer req.Body.Close()
+
 	if opts != nil {
 		for k, v := range opts.Headers {
 			req.Header.Add(k, v)
@@ -114,6 +116,18 @@ func makeRequest(client *http.Client, url string, opts *TestSpecOptions) (*TestR
 	end := time.Now().UnixNano()
 	
 	elapsedMs := (float64)((end - start) / 1000000)
+
+	data := "OK"
+
+	if resp.StatusCode >= 300 {
+		bodyBytes, err := ioutil.ReadAll(resp.Body)
+
+		if err != nil {
+			data = err.Error()
+		} else {
+			data = string(bodyBytes)
+		}
+	}
 	
-	return &TestResponse{StatusCode: resp.StatusCode, ElapsedMs: elapsedMs}, err
+	return &TestResponse{StatusCode: resp.StatusCode, ElapsedMs: elapsedMs, Data: data}, err
 }

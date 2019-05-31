@@ -18,6 +18,7 @@ type TestSpecOptions struct {
 type TestResponse struct {
 	StatusCode int
 	ElapsedMs float64
+	Data string
 }
 
 // TestResult from an executed spec
