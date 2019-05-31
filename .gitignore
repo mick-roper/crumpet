@@ -17,3 +17,6 @@ pkg/
 
 # Binaries dir
 bin/
+
+# local test extensions
+*.json
