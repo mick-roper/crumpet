@@ -30,6 +30,7 @@ func main() {
 		Options: &core.TestSpecOptions {
 			Headers: map[string]string{
 				"authorization": "apikey abc-123",
+				"x-correlation-id": "abc-123",
 			},
 		},
 	}
