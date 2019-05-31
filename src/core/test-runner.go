@@ -9,6 +9,7 @@ import (
 	"math/rand"
 	"bytes"
 	"io/ioutil"
+	"strings"
 )
 
 // Run the test
@@ -29,7 +30,9 @@ func Run(spec *TestSpec) {
 	for i := 0; i < iterations; i++ {
 		// construct a URL from the host and a random path
 		ix := rand.Intn(len(spec.Paths))
-		url := fmt.Sprintf("%v/%v", host, spec.Paths[ix])
+		a, b := strings.Trim(host, "/"), strings.Trim(spec.Paths[ix], "/")
+
+		url := fmt.Sprintf("%v/%v", a, b)
 		testChan <- url
 	}
 
