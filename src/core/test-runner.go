@@ -114,7 +114,7 @@ func makeRequest(client *http.Client, url string, opts *TestSpecOptions) (*TestR
 	defer req.Body.Close()
 
 	if opts != nil {
-		for k, v := range opts.Headers {
+		for k, v := range opts.HTTPRequestHeaders {
 			req.Header.Add(k, v)
 		}
 	}

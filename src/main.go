@@ -32,7 +32,7 @@ func main() {
 		Concurrency: concurrency,
 		MaxDelayMs: maxDelayMs,
 		Options: &core.TestSpecOptions{
-			Headers: map[string]string{
+			HTTPRequestHeaders: map[string]string{
 				"Authorization": "apikey abc-123",
 			},
 		},
