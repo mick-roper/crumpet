@@ -43,7 +43,8 @@ func getStdDev(x []float64) float64 {
 	results := make([]float64, len(x))
 
 	for i := 0; i < len(x); i++ {
-		n := ((x[i]) - avg) * ((x[i]) - avg)
+		a := (x[i]) - avg
+		n := a * a
 		results[i] = n
 	}
 
