@@ -27,14 +27,14 @@ func getMin(x []float64) float64 {
 }
 
 func getAvg(x []float64) float64 {
-	l := (float64)(len(x))
+	count := (float64)(len(x))
 	var sum float64
 
 	for i := 0; i < len(x); i++ {
 		sum += (float64)(x[i])
 	}
 
-	return sum / l
+	return sum / count
 }
 
 func getStdDev(x []float64) float64 {
