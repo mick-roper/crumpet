@@ -4,6 +4,7 @@ import (
 	"flag"
 	"core"
 	"strings"
+	"log"
 )
 
 func main() {
@@ -25,17 +26,21 @@ func main() {
 
 	var spec *core.TestSpec
 
-	spec = &core.TestSpec{
-		Host: host, 
-		Paths: strings.Split(paths, ","),
-		Iterations: iterations, 
-		Concurrency: concurrency,
-		MaxDelayMs: maxDelayMs,
-		Options: &core.TestSpecOptions{
-			HTTPRequestHeaders: map[string]string{
-				"Authorization": "apikey abc-123",
-			},
-		},
+	if specFile != "" {
+		var err error
+		spec, err = core.ReadJSONFile(specFile)
+
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		spec = &core.TestSpec{
+			Host: host, 
+			Paths: strings.Split(paths, ","),
+			Iterations: iterations, 
+			Concurrency: concurrency,
+			MaxDelayMs: maxDelayMs,
+		}
 	}
 
 	core.Run(spec)
