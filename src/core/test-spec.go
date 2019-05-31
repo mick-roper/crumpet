@@ -44,7 +44,6 @@ func (t *TestResult) Print() {
 	fmt.Printf("95th percentile:\t%6.2fms\n", t.AverageElapsedMs95thPc())
 	fmt.Printf("99th percentile:\t%6.2fms\n", t.AverageElapsedMs99thPc())
 	fmt.Printf("99.9th percentile:\t%6.2fms\n", t.AverageElapsedMs999thPc())
-	fmt.Printf("99.99th percentile:\t%6.2fms\n", t.AverageElapsedMs9999thPc())
 }
 
 // RequestCount returns the number of requests
@@ -75,11 +74,6 @@ func (t *TestResult) AverageElapsedMs99thPc() float64 {
 // AverageElapsedMs999thPc gets the 99.9th percentile average response time
 func (t *TestResult) AverageElapsedMs999thPc() float64 {
 	return getPercentileAverage(t.responses, 0.999)
-}
-
-// AverageElapsedMs9999thPc gets the 99.99th percentile average response time
-func (t *TestResult) AverageElapsedMs9999thPc() float64 {
-	return getPercentileAverage(t.responses, 0.9999)
 }
 
 // MaxElapsedMs returns the maximum elapsed ms
