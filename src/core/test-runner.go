@@ -43,7 +43,7 @@ func Run(spec *TestSpec) {
 			client := &http.Client{}
 
 			for url := range testQueue {
-				resp, err := makeRequest(client, url, nil)
+				resp, err := makeRequest(client, url, spec.Options)
 
 				if err != nil { 
 					panic(err)
