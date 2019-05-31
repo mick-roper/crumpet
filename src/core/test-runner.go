@@ -50,28 +50,28 @@ func Run(spec *TestSpec) (*TestResult, error) {
 				// atomically increment the counter
 				atomic.AddUint64(&counter, 1)
 				
+				// delay a bit
+				var delay int
+				if spec.MaxDelayMs > 0 {
+					delay = rand.Intn(spec.MaxDelayMs)
+				}
+				time.Sleep(time.Duration(delay) * time.Millisecond)
+
+				// make the request
 				resp, err := makeRequest(client, url, spec.Options)
 
-				if err != nil { 
-					panic(err)
+				if err != nil {
+					// abandon this loop
+					continue
 				}
 
 				elapsedMs := resp.ElapsedMs	
 				responseTimes = append(responseTimes, elapsedMs)
 
-				printChan <- fmt.Sprintf("runner %v\t%v\t%vms\t%v\t%v\n", ix, resp.StatusCode, elapsedMs, resp.Data, resp.URL)
-				
-				// delay a bit
-				var delay int
-
-				if spec.MaxDelayMs > 0 {
-					delay = rand.Intn(spec.MaxDelayMs)
-				}
-
-				time.Sleep(time.Duration(delay) * time.Millisecond)
-
 				wg.Add(1) // add for the benefit of the message writer
-				wg.Done() // remove due to processing being complete
+				printChan <- fmt.Sprintf("runner %v\t%v\t%vms\t%v\t%v\n", ix, resp.StatusCode, elapsedMs, resp.Data, resp.URL)
+
+				wg.Done() // remove due to request processing being complete
 			}
 		}(i, &waitGroup)
 	}
