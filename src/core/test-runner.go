@@ -7,6 +7,7 @@ import (
 	"sync"
 	"sync/atomic"
 	"math/rand"
+	"bytes"
 )
 
 // Run the test
@@ -41,7 +42,7 @@ func Run(spec *TestSpec) {
 			client := &http.Client{}
 
 			for url := range testQueue {
-				resp, err := makeRequest(client, url)
+				resp, err := makeRequest(client, url, nil)
 
 				if err != nil { 
 					fmt.Print(err)
@@ -92,14 +93,23 @@ func Run(spec *TestSpec) {
 	fmt.Printf("std deviation: %6.2fms\n", stdDev)
 }
 
-func makeRequest(client *http.Client, url string) (*TestResponse, error) {
-	start := time.Now().UnixNano()
-
-	resp, err := client.Get(url)
+func makeRequest(client *http.Client, url string, opts *TestSpecOptions) (*TestResponse, error) {
+	buffer := &bytes.Buffer{}
+	req, err := http.NewRequest("GET", url, buffer)
 
 	if err != nil {
-		defer resp.Body.Close()
+		panic(err)
 	}
+
+	if opts != nil {
+		for k, v := range opts.Headers {
+			req.Header.Add(k, v)
+		}
+	}
+
+	start := time.Now().UnixNano()
+
+	resp, err := client.Do(req)
 
 	end := time.Now().UnixNano()
 	
