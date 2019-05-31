@@ -122,6 +122,8 @@ func makeRequest(client *http.Client, url string, opts *TestSpecOptions) (*TestR
 
 	defer req.Body.Close()
 
+	req.Header.Add("User-Agent", "Crumpet-v0.0.0");
+
 	if opts != nil {
 		for k, v := range opts.HTTPRequestHeaders {
 			req.Header.Add(k, v)
