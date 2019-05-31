@@ -21,8 +21,8 @@ func Run(spec *TestSpec) {
 	fmt.Printf("Host: %v\n", host)
 	fmt.Printf("Performing %v iterations\n", iterations)
 
-	testQueue := make(chan string, iterations)
-	writeQueue := make(chan string)
+	testChan := make(chan string, iterations)
+	printChan := make(chan string)
 	responseTimes := make([]float64, iterations)
 
 	// prep
@@ -30,7 +30,7 @@ func Run(spec *TestSpec) {
 		// construct a URL from the host and a random path
 		ix := rand.Intn(len(spec.Paths))
 		url := fmt.Sprintf("%v/%v", host, spec.Paths[ix])
-		testQueue <- url
+		testChan <- url
 	}
 
 	// execution
@@ -43,7 +43,7 @@ func Run(spec *TestSpec) {
 		go func (ix int, wg *sync.WaitGroup) {
 			client := &http.Client{}
 
-			for url := range testQueue {
+			for url := range testChan {
 				resp, err := makeRequest(client, url, spec.Options)
 
 				if err != nil { 
@@ -53,7 +53,7 @@ func Run(spec *TestSpec) {
 				elapsedMs := resp.ElapsedMs	
 				responseTimes = append(responseTimes, elapsedMs)
 
-				writeQueue <- fmt.Sprintf("runner %v\t%v\t%vms\t%v\t%v\n", ix, resp.StatusCode, elapsedMs, resp.Data, resp.URL)
+				printChan <- fmt.Sprintf("runner %v\t%v\t%vms\t%v\t%v\n", ix, resp.StatusCode, elapsedMs, resp.Data, resp.URL)
 
 				// atomically increment the counter
 				atomic.AddUint64(&counter, 1)
@@ -75,7 +75,7 @@ func Run(spec *TestSpec) {
 
 	// message writer
 	go func(wg *sync.WaitGroup) {
-		for message := range writeQueue {
+		for message := range printChan {
 			fmt.Print(message)
 
 			wg.Done()
@@ -84,8 +84,10 @@ func Run(spec *TestSpec) {
 
 	// progress writer
 	go func() {
-		time.Sleep(10 * time.Second)
-		writeQueue <- fmt.Sprintf(" -- processed %v iterations --\n", atomic.LoadUint64(&counter))
+		for {
+			time.Sleep(5 * time.Second)
+			printChan <- fmt.Sprintf(" -- processed %v iterations --\n", atomic.LoadUint64(&counter))
+		}
 	}()
 
 	waitGroup.Wait()
