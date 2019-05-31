@@ -57,9 +57,9 @@ func getStdDev(x []float64) float64 {
 
 func getPercentileAverage(x []float64, pc float64) float64 {
 	n := make([]float64, len(x))
-	copy(x, n)
-
+	copy(n, x)
 	sort.Float64s(n)
+
 	floatBoundary := float64(len(x)) * pc
 	intBoundary := int(floatBoundary)
 
