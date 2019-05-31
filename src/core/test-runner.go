@@ -53,6 +53,9 @@ func Run(spec *TestSpec) {
 
 					atomic.AddUint64(&counter, 1)
 					
+					// todo: delay a bit
+					time.Sleep(100 * time.Millisecond)
+
 					wg.Add(1) // add for the benefit of the message writer
 					wg.Done() // remove due to processing being complete
 				}
