@@ -5,6 +5,7 @@ import (
 	"core"
 	"strings"
 	"log"
+	"fmt"
 )
 
 func main() {
@@ -43,5 +44,15 @@ func main() {
 		}
 	}
 
-	core.Run(spec)
+	result, err := core.Run(spec)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("requests made: %v\n", result.RequestCount)
+	fmt.Printf("min response time: %vms\n", result.MinElapsedMs)
+	fmt.Printf("max response time: %vms\n", result.MaxElapsedMs)
+	fmt.Printf("avg response time: %6.2fms\n", result.AverageElapsedMs)
+	fmt.Printf("std deviation: %6.2fms\n", result.StandardDeviation)
 }

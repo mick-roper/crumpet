@@ -25,7 +25,8 @@ type TestResponse struct {
 
 // TestResult from an executed spec
 type TestResult struct {
-	AverageElapsed float64
+	RequestCount uint64
+	AverageElapsedMs float64
 	MaxElapsedMs float64
 	MinElapsedMs float64
 	StandardDeviation float64

@@ -13,7 +13,7 @@ import (
 )
 
 // Run the test
-func Run(spec *TestSpec) {
+func Run(spec *TestSpec) (*TestResult, error) {
 	host := spec.Host
 	iterations := spec.Iterations
 
@@ -99,11 +99,15 @@ func Run(spec *TestSpec) {
 
 	min, max, avg, stdDev := getMin(responseTimes), getMax(responseTimes), getAvg(responseTimes), getStdDev(responseTimes)
 
-	fmt.Printf("requests made: %v\n", atomic.LoadUint64(&counter))
-	fmt.Printf("min response time: %vms\n", min)
-	fmt.Printf("max response time: %vms\n", max)
-	fmt.Printf("avg response time: %6.2fms\n", avg)
-	fmt.Printf("std deviation: %6.2fms\n", stdDev)
+	result := &TestResult{
+		RequestCount: atomic.LoadUint64(&counter),
+		AverageElapsedMs: avg,
+		MaxElapsedMs: max,
+		MinElapsedMs: min,
+		StandardDeviation: stdDev,
+	}
+
+	return result, nil
 }
 
 func makeRequest(client *http.Client, url string, opts *TestSpecOptions) (*TestResponse, error) {
