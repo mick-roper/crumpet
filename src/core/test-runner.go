@@ -68,7 +68,6 @@ func Run(spec *TestSpec) (*TestResult, error) {
 				elapsedMs := resp.ElapsedMs	
 				responseTimes = append(responseTimes, elapsedMs)
 
-				wg.Add(1) // add for the benefit of the message writer
 				printChan <- fmt.Sprintf("runner %v\t%v\t%vms\t%v\t%v\n", ix, resp.StatusCode, elapsedMs, resp.Data, resp.URL)
 
 				wg.Done() // remove due to request processing being complete
@@ -80,8 +79,6 @@ func Run(spec *TestSpec) (*TestResult, error) {
 	go func(wg *sync.WaitGroup) {
 		for message := range printChan {
 			fmt.Print(message)
-
-			wg.Done()
 		}
 	}(&waitGroup)
 
