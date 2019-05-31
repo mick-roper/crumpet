@@ -47,6 +47,9 @@ func Run(spec *TestSpec) {
 			client := &http.Client{}
 
 			for url := range testChan {
+				// atomically increment the counter
+				atomic.AddUint64(&counter, 1)
+				
 				resp, err := makeRequest(client, url, spec.Options)
 
 				if err != nil { 
@@ -57,9 +60,6 @@ func Run(spec *TestSpec) {
 				responseTimes = append(responseTimes, elapsedMs)
 
 				printChan <- fmt.Sprintf("runner %v\t%v\t%vms\t%v\t%v\n", ix, resp.StatusCode, elapsedMs, resp.Data, resp.URL)
-
-				// atomically increment the counter
-				atomic.AddUint64(&counter, 1)
 				
 				// delay a bit
 				var delay int
