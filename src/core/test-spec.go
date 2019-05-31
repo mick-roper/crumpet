@@ -35,14 +35,14 @@ type TestResult struct {
 
 // Print the result
 func (t *TestResult) Print() {
-	fmt.Printf("requests made: %v\n", t.RequestCount())
-	fmt.Printf("min response time: %vms\n", t.MinElapsedMs())
-	fmt.Printf("max response time: %vms\n", t.MaxElapsedMs())
-	fmt.Printf("avg response time: %6.2fms\n", t.AverageElapsedMs())
-	fmt.Printf("std deviation: %6.2fms\n", t.StandardDeviation())
-	fmt.Printf("90th percentile: %6.2fms\n", t.AverageElapsedMs90thPc())
-	fmt.Printf("95th percentile: %6.2fms\n", t.AverageElapsedMs95thPc())
-	fmt.Printf("99th percentile: %6.2fms\n", t.AverageElapsedMs99thPc())
+	fmt.Printf("requests:\t%v\n", t.RequestCount())
+	fmt.Printf("min response time:\t%vms\n", t.MinElapsedMs())
+	fmt.Printf("max response time:\t%vms\n", t.MaxElapsedMs())
+	fmt.Printf("avg response time:\t%6.2fms\n", t.AverageElapsedMs())
+	fmt.Printf("std deviation:\t%6.2fms\n", t.StandardDeviation())
+	fmt.Printf("90th percentile:\t%6.2fms\n", t.AverageElapsedMs90thPc())
+	fmt.Printf("95th percentile:\t%6.2fms\n", t.AverageElapsedMs95thPc())
+	fmt.Printf("99th percentile:\t%6.2fms\n", t.AverageElapsedMs99thPc())
 }
 
 // RequestCount returns the number of requests
