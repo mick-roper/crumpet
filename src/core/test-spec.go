@@ -12,7 +12,7 @@ type TestSpec struct {
 
 // TestSpecOptions that help to further describe a test spec
 type TestSpecOptions struct {
-	HTTPRequestHeaders map[string]string `json:"httpReqHeaders"`
+	HTTPRequestHeaders map[string]string `json:"httpRequestHeaders"`
 }
 
 // TestResponse produced by a single test run

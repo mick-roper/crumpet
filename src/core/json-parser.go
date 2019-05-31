@@ -1,6 +1,7 @@
 package core
 
 import (
+	"fmt"
 	"os"
 	"io/ioutil"
 	"encoding/json"
@@ -8,6 +9,8 @@ import (
 
 // ReadJSONFile and parse it into a test spec
 func ReadJSONFile(path string) (*TestSpec, error) {
+	fmt.Printf("Attempting to read file: %v\n", path)
+
 	jsonFile, err := os.Open(path)
 
 	if err != nil {
@@ -24,7 +27,15 @@ func ReadJSONFile(path string) (*TestSpec, error) {
 
 	var spec TestSpec
 
+	fmt.Printf("Attemting to parse contents...\n")
+
 	err = json.Unmarshal(bytes, &spec)
+
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Printf("Spec file has been parsed successfully\n\n\n")
 
 	return &spec, err
 }
