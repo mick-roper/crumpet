@@ -97,6 +97,10 @@ func makeRequest(client *http.Client, url string) (*TestResponse, error) {
 
 	resp, err := client.Get(url)
 
+	if err != nil {
+		defer resp.Body.Close()
+	}
+
 	end := time.Now().UnixNano()
 	
 	elapsedMs := (float64)((end - start) / 1000000)
