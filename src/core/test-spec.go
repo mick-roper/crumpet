@@ -14,6 +14,7 @@ type TestResponse struct {
 	ElapsedMs float64
 }
 
+// TestResult from an executed spec
 type TestResult struct {
 	AverageElapsed float64
 	MaxElapsedMs float64
