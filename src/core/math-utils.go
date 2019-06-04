@@ -3,6 +3,7 @@ package core
 import (
 	"math"
 	"sort"
+	"log"
 )
 
 func getMax(x []float64) float64 {
@@ -25,6 +26,9 @@ func getMin(x []float64) float64 {
 
 	for i := 0; i < l; i++ {
 		n = x[i]
+
+		log.Printf("DEBUG %v:\tcurrent min: %v\t current val: %v\n", i, m, n)
+
 		if n < m {
 			m = n
 		}

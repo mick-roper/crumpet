@@ -24,7 +24,7 @@ func Run(spec *TestSpec) (*TestResult, error) {
 
 	testChan := make(chan string, iterations)
 	printChan := make(chan string)
-	responseTimes := make([]float64, iterations)
+	responseTimes := make([]float64, 0)
 
 	// prep
 	for i := 0; i < iterations; i++ {
