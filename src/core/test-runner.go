@@ -47,9 +47,6 @@ func Run(spec *TestSpec) (*TestResult, error) {
 			client := &http.Client{}
 
 			for url := range testChan {
-				// atomically increment the counter
-				atomic.AddUint64(&counter, 1)
-				
 				// delay a bit
 				delay(spec)
 
@@ -67,6 +64,9 @@ func Run(spec *TestSpec) (*TestResult, error) {
 				printChan <- fmt.Sprintf("runner %v\t%v\t%vms\t%v\t%v\n", ix, resp.StatusCode, elapsedMs, resp.Data, resp.URL)
 
 				wg.Done() // remove due to request processing being complete
+
+				// atomically increment the counter
+				atomic.AddUint64(&counter, 1)
 			}
 		}(i, &waitGroup)
 	}
@@ -147,6 +147,6 @@ func delay(spec *TestSpec) {
 	if spec.MaxDelayMs > 0 {
 		delay = spec.MinDelayMs + rand.Intn(delta)
 	}
-	
+
 	time.Sleep(time.Duration(delay) * time.Millisecond)
 }
