@@ -3,6 +3,7 @@ package core
 import (
 	"fmt"
 	"errors"
+	"strings"
 )
 
 // TestSpec that a test runner will process
@@ -56,6 +57,10 @@ func (t *TestResult) Print() {
 	fmt.Printf("95th percentile:\t%6.2fms\n", t.AverageElapsedMs95thPc())
 	fmt.Printf("99th percentile:\t%6.2fms\n", t.AverageElapsedMs99thPc())
 	fmt.Printf("99.9th percentile:\t%6.2fms\n", t.AverageElapsedMs999thPc())
+
+	fmt.Print("\n")
+
+	fmt.Print(t.StatusCodeBreakdown())
 }
 
 // RequestCount returns the number of requests
@@ -124,6 +129,26 @@ func (t *TestResult) MedianElapsedMs() float64 {
 	x := getElapsedMsArray(t)
 
 	return getMedian(x)
+}
+
+// StatusCodeBreakdown returns a count of the various status codes
+func (t *TestResult) StatusCodeBreakdown() string {
+	l := len(t.responses)
+	codes := make(map[int]int)
+
+	for i := 0; i < l; i++ {
+		code := t.responses[i].StatusCode
+
+		codes[code]++
+	}
+
+	strCodes := make([]string, 0)
+
+	for k, v := range codes {
+		strCodes = append(strCodes, fmt.Sprintf("%v\t%v", k, v))
+	}
+
+	return strings.Join(strCodes, "\n")
 }
 
 func getElapsedMsArray(t *TestResult) []float64 {
