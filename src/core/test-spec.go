@@ -41,7 +41,7 @@ type TestResponse struct {
 // TestResult from an executed spec
 type TestResult struct {
 	requestCount uint64
-	responses []float64
+	responses []*TestResponse
 }
 
 // Print the result
@@ -65,45 +65,74 @@ func (t *TestResult) RequestCount() uint64 {
 
 // AverageElapsedMs returns the overall average elapsed MS
 func (t *TestResult) AverageElapsedMs() float64 {
-	return getAvg(t.responses)
+	x := getElapsedMsArray(t)
+
+	return getAvg(x)
 }
 
 // AverageElapsedMs90thPc gets the 90th percentile average response time
 func (t *TestResult) AverageElapsedMs90thPc() float64 {
-	return getPercentileAverage(t.responses, 0.9)
+	x := getElapsedMsArray(t)
+
+	return getPercentileAverage(x, 0.9)
 }
 
 // AverageElapsedMs95thPc gets the 95th percentile average response time
 func (t *TestResult) AverageElapsedMs95thPc() float64 {
-	return getPercentileAverage(t.responses, 0.95)
+	x := getElapsedMsArray(t)
+
+	return getPercentileAverage(x, 0.95)
 }
 
 // AverageElapsedMs99thPc gets the 99th percentile average response time
 func (t *TestResult) AverageElapsedMs99thPc() float64 {
-	return getPercentileAverage(t.responses, 0.99)
+	x := getElapsedMsArray(t)
+
+	return getPercentileAverage(x, 0.99)
 }
 
 // AverageElapsedMs999thPc gets the 99.9th percentile average response time
 func (t *TestResult) AverageElapsedMs999thPc() float64 {
-	return getPercentileAverage(t.responses, 0.999)
+	x := getElapsedMsArray(t)
+
+	return getPercentileAverage(x, 0.999)
 }
 
 // MaxElapsedMs returns the maximum elapsed ms
 func (t *TestResult) MaxElapsedMs() float64 {
-	return getMax(t.responses)
+	x := getElapsedMsArray(t)
+
+	return getMax(x)
 }
 
 // MinElapsedMs returns the minimum elpased ms
 func (t *TestResult) MinElapsedMs() float64 {
-	return getMin(t.responses)
+	x := getElapsedMsArray(t)
+
+	return getMin(x)
 }
 
 // StandardDeviation returns the standard deviation of the test
 func (t *TestResult) StandardDeviation() float64 {
-	return getStdDev(t.responses)
+	x := getElapsedMsArray(t)
+
+	return getStdDev(x)
 }
 
 // MedianElapsedMs returns the medium elapsed response time
 func (t *TestResult) MedianElapsedMs() float64 {
-	return getMedian(t.responses)
+	x := getElapsedMsArray(t)
+
+	return getMedian(x)
 }
+
+func getElapsedMsArray(t *TestResult) []float64 {
+	l := len(t.responses)
+	array := make([]float64, l)
+
+	for i := 0; i < l; i++ {
+		array[i] = t.responses[i].ElapsedMs
+	}
+
+	return array
+} 
