@@ -46,7 +46,7 @@ type TestResult struct {
 
 // Print the result
 func (t *TestResult) Print() {
-	fmt.Printf("requests:\t%v\n", t.RequestCount())
+	fmt.Printf("requests:\t%v\n\n", t.RequestCount())
 	fmt.Printf("median response time:\t%vms\n", t.MedianElapsedMs())
 	fmt.Printf("min response time:\t%vms\n", t.MinElapsedMs())
 	fmt.Printf("max response time:\t%vms\n", t.MaxElapsedMs())
