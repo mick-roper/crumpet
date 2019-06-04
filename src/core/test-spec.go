@@ -57,7 +57,7 @@ func (t *TestResult) Print() {
 	fmt.Printf("95th percentile:\t%6.2fms\n", t.AverageElapsedMs95thPc())
 	fmt.Printf("99th percentile:\t%6.2fms\n", t.AverageElapsedMs99thPc())
 	fmt.Printf("99.9th percentile:\t%6.2fms\n", t.AverageElapsedMs999thPc())
-	fmt.Printf("\n%v\n", t.StatusCodeBreakdown())
+	fmt.Printf("\nHTTP Response Code Breakdown:\n%v\n", t.StatusCodeBreakdown())
 }
 
 // RequestCount returns the number of requests
@@ -142,7 +142,7 @@ func (t *TestResult) StatusCodeBreakdown() string {
 	strCodes := make([]string, 0)
 
 	for k, v := range codes {
-		strCodes = append(strCodes, fmt.Sprintf("%v\t%v", k, v))
+		strCodes = append(strCodes, fmt.Sprintf("%v:\t%v", k, v))
 	}
 
 	return strings.Join(strCodes, "\n")
