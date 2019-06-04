@@ -24,7 +24,7 @@ func Run(spec *TestSpec) (*TestResult, error) {
 
 	testChan := make(chan string, iterations)
 	printChan := make(chan string)
-	responseTimes := make([]float64, 0)
+	responses := make([]*TestResponse, 0)
 
 	// prep
 	for i := 0; i < iterations; i++ {
@@ -51,17 +51,16 @@ func Run(spec *TestSpec) (*TestResult, error) {
 				delay(spec)
 
 				// make the request
-				resp, err := makeRequest(client, url, spec.Options)
+				response, err := makeRequest(client, url, spec.Options)
 
 				if err != nil {
 					// abandon this loop
 					continue
 				}
 
-				elapsedMs := resp.ElapsedMs	
-				responseTimes = append(responseTimes, elapsedMs)
+				responses = append(responses, response)
 
-				printChan <- fmt.Sprintf("runner %v\t%v\t%vms\t%v\t%v\n", ix, resp.StatusCode, elapsedMs, resp.Data, resp.URL)
+				printChan <- fmt.Sprintf("runner %v\t%v\t%vms\t%v\t%v\n", ix, response.StatusCode, response.ElapsedMs, response.Data, response.URL)
 
 				wg.Done() // remove due to request processing being complete
 
@@ -94,7 +93,7 @@ func Run(spec *TestSpec) (*TestResult, error) {
 
 	result := &TestResult{
 		requestCount: atomic.LoadUint64(&counter),
-		responses: responseTimes,
+		responses: responses,
 	}
 
 	return result, nil
