@@ -57,10 +57,7 @@ func (t *TestResult) Print() {
 	fmt.Printf("95th percentile:\t%6.2fms\n", t.AverageElapsedMs95thPc())
 	fmt.Printf("99th percentile:\t%6.2fms\n", t.AverageElapsedMs99thPc())
 	fmt.Printf("99.9th percentile:\t%6.2fms\n", t.AverageElapsedMs999thPc())
-
-	fmt.Print("\n")
-
-	fmt.Print(t.StatusCodeBreakdown())
+	fmt.Printf("\n%v\n", t.StatusCodeBreakdown())
 }
 
 // RequestCount returns the number of requests
