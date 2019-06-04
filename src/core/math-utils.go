@@ -71,3 +71,22 @@ func getPercentileAverage(x []float64, pc float64) float64 {
 
 	return avg
 }
+
+func getMedian(x []float64) float64 {
+	var m float64
+	l := len(x)
+
+	if (l > 0) {
+		n := make([]float64, l)
+		copy(n, x)
+		sort.Float64s(n)
+
+		if (l % 2 == 0) {
+			m = n[l / 2 -1]
+		} else {
+			m = n[l / 2]
+		}
+	}
+
+	return m
+}

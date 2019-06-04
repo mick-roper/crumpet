@@ -47,6 +47,7 @@ type TestResult struct {
 // Print the result
 func (t *TestResult) Print() {
 	fmt.Printf("requests:\t%v\n", t.RequestCount())
+	fmt.Printf("median response time:\t%vms\n", )
 	fmt.Printf("min response time:\t%vms\n", t.MinElapsedMs())
 	fmt.Printf("max response time:\t%vms\n", t.MaxElapsedMs())
 	fmt.Printf("avg response time:\t%6.2fms\n", t.AverageElapsedMs())
@@ -100,4 +101,9 @@ func (t *TestResult) MinElapsedMs() float64 {
 // StandardDeviation returns the standard deviation of the test
 func (t *TestResult) StandardDeviation() float64 {
 	return getStdDev(t.responses)
+}
+
+// MedianElapsedMs returns the medium elapsed response time
+func (t *TestResult) MedianElapsedMs() float64 {
+	return getMedian(t.responses)
 }
