@@ -67,8 +67,6 @@ func Run(spec *TestSpec) (*TestResult, error) {
 				// atomically increment the counter
 				atomic.AddUint64(&counter, 1)
 			}
-
-			printChan <- fmt.Sprintf("runner %v: processing complete\n", ix)
 		}(i, &waitGroup)
 	}
 
