@@ -51,11 +51,7 @@ func Run(spec *TestSpec) (*TestResult, error) {
 				atomic.AddUint64(&counter, 1)
 				
 				// delay a bit
-				var delay int
-				if spec.MaxDelayMs > 0 {
-					delay = rand.Intn(spec.MaxDelayMs)
-				}
-				time.Sleep(time.Duration(delay) * time.Millisecond)
+				delay(spec)
 
 				// make the request
 				resp, err := makeRequest(client, url, spec.Options)
@@ -141,4 +137,16 @@ func makeRequest(client *http.Client, url string, opts *TestSpecOptions) (*TestR
 	}
 	
 	return &TestResponse{URL: url, StatusCode: resp.StatusCode, ElapsedMs: elapsedMs, Data: data}, err
+}
+
+func delay(spec *TestSpec) {
+	var delay int
+
+	delta := spec.MaxDelayMs - spec.MinDelayMs
+
+	if spec.MaxDelayMs > 0 {
+		delay = spec.MinDelayMs + rand.Intn(delta)
+	}
+	
+	time.Sleep(time.Duration(delay) * time.Millisecond)
 }
