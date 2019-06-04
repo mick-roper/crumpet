@@ -19,10 +19,12 @@ func getMax(x []float64) float64 {
 
 func getMin(x []float64) float64 {
 	var m float64 = 10000000000 // arbitrarily large number
+	var n float64
 
 	for i := 0; i < len(x); i++ {
-		if x[i] < m {
-			m = x[i]
+		n = x[i]
+		if n < m {
+			m = n
 		}
 	}
 
