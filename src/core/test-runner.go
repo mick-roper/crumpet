@@ -54,13 +54,12 @@ func Run(spec *TestSpec) (*TestResult, error) {
 				response, err := makeRequest(client, url, spec.Options)
 
 				if err != nil {
-					// abandon this loop
-					continue
+					printChan <- fmt.Sprintf("runner %v\t%v\n", ix, err)
+				} else {
+					responses = append(responses, response)
+
+					printChan <- fmt.Sprintf("runner %v\t%v\t%vms\t%v\t%v\n", ix, response.StatusCode, response.ElapsedMs, response.Data, response.URL)	
 				}
-
-				responses = append(responses, response)
-
-				printChan <- fmt.Sprintf("runner %v\t%v\t%vms\t%v\t%v\n", ix, response.StatusCode, response.ElapsedMs, response.Data, response.URL)
 
 				wg.Done() // remove due to request processing being complete
 
@@ -118,6 +117,10 @@ func makeRequest(client *http.Client, url string, opts *TestSpecOptions) (*TestR
 	start := time.Now().UnixNano()
 
 	resp, err := client.Do(req)
+
+	if err != nil {
+		return nil, err
+	}
 
 	end := time.Now().UnixNano()
 	
