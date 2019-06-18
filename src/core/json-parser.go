@@ -8,7 +8,7 @@ import (
 )
 
 // ReadJSONFile and parse it into a test spec
-func ReadJSONFile(path string) (*TestSpec, error) {
+func ReadJSONFile(path string) (*ScenarioSpec, error) {
 	fmt.Printf("Attempting to read file: %v\n", path)
 
 	jsonFile, err := os.Open(path)
@@ -25,7 +25,7 @@ func ReadJSONFile(path string) (*TestSpec, error) {
 		return nil, err
 	}
 
-	var spec TestSpec
+	var spec ScenarioSpec
 
 	fmt.Printf("Attemting to parse contents...\n")
 

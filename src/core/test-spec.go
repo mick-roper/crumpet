@@ -6,37 +6,12 @@ import (
 	"strings"
 )
 
-// TestSpec that a test runner will process
-type TestSpec struct {
-	Host string `json:"host"`
-	Paths []string `json:"paths"`
-	Iterations int `json:"iterations"`
-	Concurrency int `json:"concurrency"`
-	MinDelayMs int `json:"minDelayMs"`
-	MaxDelayMs int `json:"maxDelayMs"`
-	Options *TestSpecOptions `json:"options"`
-}
-
-// Validate a TestSpec
-func (t *TestSpec) Validate() error {
-	if t.MaxDelayMs < t.MinDelayMs {
-		return errors.New("'Max Delay' must be greater than or equal to 'Min Delay'")
-	}
-
-	return nil
-}
-
-// TestSpecOptions that help to further describe a test spec
-type TestSpecOptions struct {
-	HTTPRequestHeaders map[string]string `json:"httpRequestHeaders"`
-}
-
-// TestResponse produced by a single test run
-type TestResponse struct {
+// StepResponse produced by a single test run
+type StepResponse struct {
 	URL string
 	StatusCode int
 	ElapsedMs float64
-	Data string
+	Data string // todo: look into this
 }
 
 // TestResult from an executed spec
